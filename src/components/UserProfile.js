@@ -13,7 +13,6 @@ const UserProfile = () => {
     const result = await axios.get("http://localhost:9091/api/users");
     const desiredUser = result.data.find(user => user.id === userId);
     setUser(desiredUser.username);
-    console.log("desire: ",desiredUser.username);
   }
 
   useEffect(() => {
