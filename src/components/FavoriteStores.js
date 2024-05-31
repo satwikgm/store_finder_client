@@ -7,7 +7,6 @@ const FavoriteStores = ({ userId }) => {
   const loadUsersFavourite = async() => {
     const result = 
         await axios.get(`http://localhost:9091/api/users/${userId}/favorites`);
-    console.log("fac:",result.data);
     setStores(result.data);
   }
 

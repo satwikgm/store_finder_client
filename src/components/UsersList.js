@@ -7,7 +7,6 @@ const UsersList = () => {
 
   const loadUsers = async() => {
     const result = await axios.get("http://localhost:9091/api/users");
-    console.log(result.data);
     setUsers(result.data);
   }
 
