@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FavoriteStores from './FavoriteStores'; // Import FavoriteStores component
+import { Link } from 'react-router-dom';
 
 const SearchStores = ({ userId }) => {
   const [keyword, setKeyword] = useState('');
@@ -77,11 +78,10 @@ const SearchStores = ({ userId }) => {
               checked={favoriteStores.some(favorite => favorite.id === store.id)}
               onChange={() => toggleFavorite(store.id)}
             />
-            {store.name}
+            <Link to={`/stores/${store.id}`}>{store.name}</Link>
           </li>
         ))}
       </ul>
-      {/* Pass favorite stores to FavoriteStores component */}
       <FavoriteStores userId={userId} favoriteStores={favoriteStores} />
     </div>
   );
