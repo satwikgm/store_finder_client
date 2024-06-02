@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FavoriteStores from './FavoriteStores'; // Import FavoriteStores component
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-const SearchStores = ({ userId }) => {
+import styles from '../styles/searchStoresStyles'; // Import the new styles
+
+
+const SearchStores = () => {
+	const {userId} = useParams();
   const [keyword, setKeyword] = useState('');
   const [allStores, setAllStores] = useState([]);
   const [filteredStores, setFilteredStores] = useState([]);
@@ -26,7 +29,7 @@ const SearchStores = ({ userId }) => {
   useEffect(() => {
     const fetchFavoriteStores = async () => {
       try {
-        const response = await axios.get(`http://localhost:9091/api/users/${userId}/favorites`);
+        const response = await axios.get(`http://localhost:9091/api/auth/${userId}/favorites`);
         setFavoriteStores(response.data);
       } catch (error) {
         console.error('Error fetching favorite stores:', error);
@@ -47,44 +50,65 @@ const SearchStores = ({ userId }) => {
 
   const toggleFavorite = async (storeId) => {
     const isFavorite = favoriteStores.some(store => store.id === storeId);
+		console.log("abcde:",isFavorite);	
     try {
       if (!isFavorite) {
-        await axios.post(`http://localhost:9091/api/users/${userId}/favorites/${storeId}`);
+        await axios.post(`http://localhost:9091/api/auth/${userId}/favorites/${storeId}`);
       } else {
-        await axios.delete(`http://localhost:9091/api/users/${userId}/favorites/${storeId}`);
+        await axios.delete(`http://localhost:9091/api/auth/${userId}/favorites/${storeId}`);
       }
       // Update favorite stores after toggling
-      const response = await axios.get(`http://localhost:9091/api/users/${userId}/favorites`);
+      const response = await axios.get(`http://localhost:9091/api/auth/${userId}/favorites`);
       setFavoriteStores(response.data);
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }
   };
+	console.log("dummy: ",allStores,favoriteStores);
+
+	const getButtonText = (storeId) => {
+    return favoriteStores.some(favorite => favorite.id === storeId) ? 'Remove from fav' : 'Mark as fav';
+  };
 
   return (
-    <div>
-      <h2>Search Stores</h2>
+    <div style={styles.container}>
+      <h2 style={styles.header}>Search Stores</h2>
       <input
         type="text"
         value={keyword}
         onChange={handleSearch}
         placeholder="Enter keyword"
+        style={styles.input}
       />
-      <ul>
+      <div style={styles.grid}>
         {filteredStores.map(store => (
-          <li key={store.id}>
-            <input
-              type="checkbox"
-              checked={favoriteStores.some(favorite => favorite.id === store.id)}
-              onChange={() => toggleFavorite(store.id)}
-            />
-            <Link to={`/stores/${store.id}`}>{store.name}</Link>
-          </li>
+          <div key={store.id} style={styles.gridItem}>
+            <div style={styles.storeName}>{store.name}</div>
+            <img src="https://via.placeholder.com/150" alt="Store" style={styles.storeImage} />
+            <Link to={`/stores/${store.id}`} style={styles.link}>{store.name}</Link>
+						<button
+              onClick={() => toggleFavorite(store.id)}
+              style={favoriteButtonStyles(favoriteStores.some(favorite => favorite.id === store.id))}
+            >
+              {getButtonText(store.id)}
+            </button>
+          </div>
         ))}
-      </ul>
-      <FavoriteStores userId={userId} favoriteStores={favoriteStores} />
+      </div>
     </div>
   );
 };
+
+const favoriteButtonStyles = (isFavorite) => ({
+  background: isFavorite ? '#f44336' : '#2196F3', // Red if favorited, blue if not
+  color: '#fff', // White text color
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  transition: 'background 0.3s ease',
+  outline: 'none',
+  marginTop: '10px', // Add margin for spacing
+});
 
 export default SearchStores;
