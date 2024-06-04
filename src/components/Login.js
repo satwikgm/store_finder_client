@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [passwordHash, setPasswordHash] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  let flag = false;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,6 +18,7 @@ const LoginPage = () => {
       console.log('Login successful:', response);
       navigate(`/user/${response.data}/favourites`);
     } catch (error) {
+      flag = true;
       console.error('Login failed:', error);
       setError('Invalid email or password');
     }
@@ -48,11 +50,10 @@ const LoginPage = () => {
         </div>
         <button type="submit" style={styles.button}>Login</button>
       </form>
-      {error && 
         <div style={styles.errorContainer}>
-          <p style={styles.errorText}>{error} Click here to <Link to="/signup" style={styles.link}>Signup</Link></p>
+          {{error} ? <p style={styles.errorText}>{error}</p> : {}}
+          <p>Click here to <Link to="/signup" style={styles.link}>Signup</Link></p>
         </div>
-      }
     </div>
   );
 };
