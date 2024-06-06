@@ -86,6 +86,26 @@ const SearchStores = () => {
     navigate(`/stores/${storeId}`);
   };
 
+  const [averageRating, setAverageRating] = useState({});
+  useEffect(() => {
+    const fetchAverageRatings = async () => {
+      const ratings = {};
+      for(const store of allStores) {
+        try {
+          const response = await axios.get(
+            `http://localhost:9091/api/reviews/store/${store.id}/average-rating`
+          );
+          ratings[store.id] = response.data;
+        } catch(error) {
+          console.log(error);
+        }
+      }
+      setAverageRating(ratings);
+    };
+
+    fetchAverageRatings();
+  }, [allStores]);
+
   return (
     <div style={styles.container}>
       <Header />
@@ -102,16 +122,24 @@ const SearchStores = () => {
           <div
             key={store.id}
             style={styles.gridItem}
-            onClick={() => handleStoreClick(store.id)}
           >
-            <div style={styles.storeName}>{store.name}</div>
             <img
               src={store.logoImageUrl}
               alt="Store"
               style={styles.storeImage}
+              onClick={() => handleStoreClick(store.id)}
             />
             <Link to={`/stores/${store.id}`} style={styles.link}>
               {store.name}
+              <div style={styles.storeName}>
+                {averageRating[store.id] && 
+                  (
+                    <span>
+                      ({averageRating[store.id].toFixed(1)})
+                    </span>
+                  )
+                }
+              </div>
             </Link>
             <button
               onClick={() => toggleFavorite(store.id)}

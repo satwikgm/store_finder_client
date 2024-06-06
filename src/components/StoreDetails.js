@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Map from "./map";
 // import mapStyles from "../styles/mapStyles"
+import AddReview from "./AddReview";
 
 const StoreDetails = () => {
   const { storeId } = useParams();
@@ -78,6 +79,7 @@ const StoreDetails = () => {
           </li>
         ))}
       </ul>
+      <AddReview />
     </div>
     <Map center={coordinates}/>
     </>
