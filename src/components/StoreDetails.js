@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Map from "./map";
 // import mapStyles from "../styles/mapStyles"
+import AddReview from "./AddReview";
 
 const StoreDetails = () => {
   const { storeId, id } = useParams();
