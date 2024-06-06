@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Map from "./map";
+// import mapStyles from "../styles/mapStyles"
 
 const StoreDetails = () => {
-  const { storeId } = useParams();
+  const { storeId, id } = useParams();
   const [store, setStore] = useState(null);
 
   useEffect(() => {
@@ -21,11 +23,30 @@ const StoreDetails = () => {
     fetchStoreDetails();
   }, [storeId]);
 
+  const [coordinates, setCoordinates] = useState({lng:90, lat:90});
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9091/api/locations/${id}`); // Replace with your API endpoint
+        const data = await response.json();
+        console.log(data);
+        setCoordinates({ lng: data.longitude, lat: data.latitude });
+      } catch (error) {
+        console.error('Error fetching coordinates:', error);
+      }
+    };
+
+    fetchCoordinates();
+  }, [id]);
+
+
   if (!store) {
     return <div style={styles.loading}>Loading...</div>;
   }
 
   return (
+    <>
     <div style={styles.container}>
       <h2 style={styles.storeName}>{store.name}</h2>
       <img
@@ -59,6 +80,8 @@ const StoreDetails = () => {
         ))}
       </ul>
     </div>
+    <Map center={coordinates}/>
+    </>
   );
 };
 
