@@ -5,8 +5,9 @@ import Map from "./map";
 // import mapStyles from "../styles/mapStyles"
 
 const StoreDetails = () => {
-  const { storeId, id } = useParams();
+  const { storeId } = useParams();
   const [store, setStore] = useState(null);
+  const [coordinates, setCoordinates] = useState({lng:77.59, lat:12.97});
 
   useEffect(() => {
     const fetchStoreDetails = async () => {
@@ -23,22 +24,20 @@ const StoreDetails = () => {
     fetchStoreDetails();
   }, [storeId]);
 
-  const [coordinates, setCoordinates] = useState({lng:90, lat:90});
-
   useEffect(() => {
     const fetchCoordinates = async () => {
       try {
-        const response = await axios.get(`http://localhost:9091/api/locations/${id}`); // Replace with your API endpoint
-        const data = await response.json();
-        console.log(data);
+        const response = await axios.get(`http://localhost:9091/api/stores/${storeId}`); // Replace with your API endpoint
+        const data = await response.data.location;
+        console.log("Fetched coordinates:", data); // Debugging log
         setCoordinates({ lng: data.longitude, lat: data.latitude });
       } catch (error) {
-        console.error('Error fetching coordinates:', error);
+        console.error("Error fetching coordinates:", error);
       }
     };
 
     fetchCoordinates();
-  }, [id]);
+  }, []);
 
 
   if (!store) {

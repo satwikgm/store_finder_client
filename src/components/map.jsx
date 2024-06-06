@@ -11,7 +11,7 @@ export default function Map({center}) {
   maptilersdk.config.apiKey = 'FqucZnXk2iGtfTzLv071';
 
   useEffect(() => {
-    if (map.current) return; // stops map from intializing more than once
+    // if (map.current) return; // stops map from intializing more than once
 
     map.current = new maptilersdk.Map({
       container: mapContainer.current,
@@ -24,7 +24,7 @@ export default function Map({center}) {
       .setLngLat([center.lng,center.lat])
       .addTo(map.current);
 
-  }, [center, zoom]);
+  }, [center]);
 
 
 
