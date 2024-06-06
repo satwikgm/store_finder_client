@@ -20,7 +20,7 @@ const UserProfile = () => {
 
   return (
     <div>
-      <h2>UserName: {user}</h2>
+      <h2>Hi, {user}</h2>
       <FavoriteStores userId={userId}/>
     </div>
   );

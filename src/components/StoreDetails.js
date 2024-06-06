@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import AddReview from "./AddReview";
 
 const StoreDetails = () => {
   const { storeId } = useParams();
@@ -58,6 +59,7 @@ const StoreDetails = () => {
           </li>
         ))}
       </ul>
+      <AddReview />
     </div>
   );
 };
